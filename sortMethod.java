@@ -5,6 +5,12 @@ import java.util.*;
 import java.io.*;
 
 public class sortMethod {
+	public static void swap(int[] arr,int i,int j) {
+		int tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
+	}
+
 	// Insertion sort
 	public static void insertionSort(int[] arr) {
 		for(int j = 1;j < arr.length;j++) {
@@ -51,6 +57,42 @@ public class sortMethod {
 		}
 	}
 
+	// Heap sort
+	// maintain a max heap
+	public static void maxHeapify(int[] arr,int i,int heapSize) {
+		int leftChild = i * 2;
+		int rightChild = i * 2 + 1;
+		int largest;
+		if(leftChild <= heapSize  && arr[leftChild] > arr[i])
+			largest = leftChild;
+		else
+			largest = i;
+		if(rightChild <= heapSize  && arr[rightChild] > arr[largest])
+			largest = rightChild;
+		if(i != largest) {
+			swap(arr,i,largest);
+			maxHeapify(arr,largest,heapSize);
+		}
+
+	}
+
+	// initialize a max heap
+	public static void buildMaxHeap(int[] arr) {
+		for(int i = (arr.length - 1) / 2;i >= 1;i--)
+			maxHeapify(arr,i,arr.length - 1);
+	}
+
+	// actual heap sort
+	public static void heapSort(int[] arr,int heapSize) {
+		int size = heapSize;
+		buildMaxHeap(arr);
+		for(int i = heapSize;i >= 2;i--) {
+			swap(arr,i,1);
+			size--;
+			maxHeapify(arr,1,size);
+		}
+	}
+
 	public static void main(String[] args) throws IOException {
 		if(args.length < 1) {
 			System.out.println("The number of input parameters should be 1!");
@@ -92,6 +134,16 @@ public class sortMethod {
 		sortMethod.mergeSort(tmp,0,tmp.length - 1);
 		System.out.printf("%n(Merge sort)The sorted array is: ");
 		for(int i = 0;i < tmp.length;i++) {
+			System.out.printf("%d ",tmp[i]);
+		}
+
+		tmp = new int[arr.length + 1];
+		tmp[0] = Integer.MAX_VALUE;
+		for(int i = 1;i < tmp.length;i++)
+			tmp[i] = arr[i - 1];
+		sortMethod.heapSort(tmp,arr.length);
+		System.out.printf("%n(Heap sort)The sorted array is: ");
+		for(int i = 1;i < tmp.length;i++) {
 			System.out.printf("%d ",tmp[i]);
 		}
 	}
